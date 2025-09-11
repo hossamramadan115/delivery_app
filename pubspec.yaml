@@ -33,6 +33,7 @@ dependencies:
   firebase_core: ^4.1.0
   flutter:
     sdk: flutter
+  go_router: ^16.2.1
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.4
@@ -44,7 +45,7 @@ flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/images/icon.png"
-  android_adaptive_icon_background: "#ffffff"  # خلفية بيضاء
+  android_adaptive_icon_background: "#ffffff" # خلفية بيضاء
   android_adaptive_icon_foreground: "assets/images/icon2.png"
 
 # For information on the generic Dart part of this file, see the

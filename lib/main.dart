@@ -1,5 +1,5 @@
 import 'package:delivery/firebase_options.dart';
-import 'package:delivery/pages/home_page.dart';
+import 'package:delivery/utils/app_router.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -18,8 +18,8 @@ class DeliveryApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: HomePage(),
+    return MaterialApp.router(
+      routerConfig: AppRouter.router,
     );
   }
 }
