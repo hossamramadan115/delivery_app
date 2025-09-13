@@ -1,10 +1,10 @@
-import 'package:delivery/pages/home_page.dart';
+import 'package:delivery/pages/bottom_bar.dart';
 import 'package:delivery/pages/on_boarding.dart';
 import 'package:go_router/go_router.dart';
 
 abstract class AppRouter {
   static final kOnBoarding = '/';
-  static final kHomePage = '/homePage';
+  static final kBottomBar = '/bottomBar';
 
   static final router = GoRouter(
     routes: [
@@ -12,10 +12,9 @@ abstract class AppRouter {
         path: kOnBoarding,
         builder: (context, state) => OnBoarding(),
       ),
-
       GoRoute(
-        path: kHomePage,
-        builder: (context, state) => HomePage(),
+        path: kBottomBar,
+        builder: (context, state) => BottomBar(),
       ),
     ],
   );

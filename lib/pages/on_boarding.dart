@@ -1,4 +1,5 @@
 import 'package:delivery/utils/app_router.dart';
+import 'package:delivery/utils/app_styless.dart';
 import 'package:delivery/utils/assets.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -15,7 +16,7 @@ class OnBoarding extends StatelessWidget {
       backgroundColor: const Color(0xffFCF7D7),
       body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Image.asset(
               Assets.kOnboarding,
@@ -26,42 +27,43 @@ class OnBoarding extends StatelessWidget {
 
             SizedBox(height: screenHeight * 0.03),
 
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-              child: Text(
-                'Explore\nThe Best\nProducts',
-                style: TextStyle(
-                  fontSize: screenWidth * 0.1,
-                  fontWeight: FontWeight.bold,
-                  height: 1.2,
-                ),
-              ),
+            Text(
+              textAlign: TextAlign.center,
+              'Track your Parcel\nfrom anywhere',
+              style: AppStyless.styleBold28,
+            ),
+
+            SizedBox(height: screenHeight * 0.03),
+
+            Text(
+              textAlign: TextAlign.center,
+              'Check the progress of \nyour deliveries',
+              style: AppStyless.styleBold18,
             ),
 
             SizedBox(height: screenHeight * 0.05),
 
             /// زر Next
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 GestureDetector(
                   onTap: () {
-                    GoRouter.of(context).push(AppRouter.kHomePage);
+                    GoRouter.of(context).push(AppRouter.kBottomBar);
                   },
                   child: Container(
-                    margin: EdgeInsets.only(right: screenWidth * 0.05),
-                    padding: EdgeInsets.all(screenWidth * 0.07),
-                    decoration: const BoxDecoration(
-                      color: Colors.black,
-                      shape: BoxShape.circle,
+                    // margin: EdgeInsets.only(right: screenWidth * 0.05),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.07,
+                        vertical: screenHeight * 0.009),
+                    decoration: BoxDecoration(
+                      color: Color(0xfff8ae39),
+                      borderRadius: BorderRadius.circular(16),
+                      // shape: BoxShape.circle,
                     ),
                     child: Text(
-                      'Next',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: screenWidth * 0.05,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      'Track Now',
+                      style: AppStyless.styleWhiteBold22,
                     ),
                   ),
                 ),
