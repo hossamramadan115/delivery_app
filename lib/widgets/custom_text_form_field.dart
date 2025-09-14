@@ -9,6 +9,7 @@ class CustomTextFormField extends StatelessWidget {
     this.obscureText = false,
     this.validator,
     this.icon,
+    this.iconColor,
     this.controller,
     this.useBorder = false,
     this.backgroundColor,
@@ -20,6 +21,7 @@ class CustomTextFormField extends StatelessWidget {
   final Function(String)? onChanged;
   final String? Function(String?)? validator;
   final IconData? icon;
+  final Color? iconColor;
   final TextEditingController? controller;
   final bool useBorder;
   final Color? backgroundColor;
@@ -28,7 +30,7 @@ class CustomTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 20),
+      padding: icon != null ? null : const EdgeInsets.only(left: 20),
       decoration: BoxDecoration(
         color: backgroundColor ?? Color(0xfff4f5f9),
         borderRadius: BorderRadius.circular(10),
@@ -42,7 +44,7 @@ class CustomTextFormField extends StatelessWidget {
         onChanged: onChanged,
         style: const TextStyle(color: Colors.black),
         decoration: InputDecoration(
-          prefixIcon: icon != null ? Icon(icon) : null,
+          prefixIcon: icon != null ? Icon(icon, color: iconColor) : null,
           label: label,
           hintText: hintText,
           floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -64,4 +66,3 @@ class CustomTextFormField extends StatelessWidget {
     );
   }
 }
-

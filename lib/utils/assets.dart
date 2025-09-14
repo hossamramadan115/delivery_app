@@ -1,4 +1,8 @@
 abstract class Assets {
   static const kOnboarding = 'assets/images/onboarding.jpg';
   static const kProfileImage = 'assets/images/profile.png';
+  static const kOnHome = 'assets/images/onhome.png';
+  static const kDeliveryBike = 'assets/images/delivery_bike.png';
+  static const kFastDelivery = 'assets/images/fast_delivery.png';
+  static const kParcel = 'assets/images/parcel.png';
 }
