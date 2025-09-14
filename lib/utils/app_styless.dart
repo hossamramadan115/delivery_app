@@ -18,4 +18,9 @@ abstract class AppStyless {
     fontSize: 22,
     fontWeight: FontWeight.bold,
   );
+  static TextStyle styleWhiteBold15 = TextStyle(
+    color: Colors.white54,
+    fontSize: 15,
+    fontWeight: FontWeight.bold,
+  );
 }
