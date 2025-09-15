@@ -1,7 +1,8 @@
 import 'package:delivery/constsnt.dart';
 import 'package:delivery/utils/app_styless.dart';
-import 'package:delivery/utils/assets.dart';
-import 'package:delivery/widgets/custom_text_form_field.dart';
+import 'package:delivery/utils/media_query_values.dart';
+import 'package:delivery/widgets/all_custom_delivers_section.dart';
+import 'package:delivery/widgets/track_your_shipment_section.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -10,72 +11,39 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: kPrimaryColor,
-      body: Container(
-        margin: EdgeInsets.only(top: 40, right: 20, left: 20),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  FontAwesomeIcons.locationDot,
-                  color: kHomeColor,
-                ),
-                SizedBox(width: 10),
-                Text(
-                  'current location',
-                  style: AppStyless.styleBold18,
-                ),
-              ],
-            ),
-            Text(
-              'City name : sers ellian',
-              style: AppStyless.styleBold28.copyWith(fontSize: 20),
-            ),
-            SizedBox(height: screenHeight * .015),
-            Container(
-              width: screenWidth,
-              height: screenHeight / 2.2,
-              decoration: BoxDecoration(
-                color: kHomeColor,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+      body: SingleChildScrollView(
+        child: Container(
+          margin: EdgeInsets.only(
+              top: context.screenHeight * 0.05, right: 16, left: 16),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: screenHeight * .02),
+                  Icon(
+                    FontAwesomeIcons.locationDot,
+                    color: kMostUse,
+                  ),
+                  SizedBox(width: 10),
                   Text(
-                    'Track your shipment',
-                    style: AppStyless.styleWhiteBold22,
+                    'current location',
+                    style: AppStyless.styleBold18,
                   ),
-                  Text(
-                    'Please enter your shipment number',
-                    style: AppStyless.styleWhiteBold15,
-                  ),
-                  SizedBox(height: screenHeight * .03),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: screenHeight * .026),
-                    child: CustomTextFormField(
-                      backgroundColor: Colors.white,
-                      icon: Icons.track_changes,
-                      iconColor: Colors.red,
-                      hintText: 'Enter track number',
-                    ),
-                  ),
-                  Spacer(),
-                  Image.asset(
-                    Assets.kOnHome,
-                    height: screenHeight * .25,
-                  )
                 ],
               ),
-            ),
-          ],
+              Text(
+                'City name : sers ellian',
+                style: AppStyless.styleBold28.copyWith(fontSize: 20),
+              ),
+              SizedBox(height: context.screenHeight * .015),
+              TrackYourShipmentSection(),
+              SizedBox(height: context.screenHeight * .03),
+              AllCustomDeliversSection(),
+              SizedBox(height: context.screenHeight * .08),
+            ],
+          ),
         ),
       ),
     );

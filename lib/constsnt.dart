@@ -5,5 +5,4 @@ import 'package:flutter/material.dart';
 //    String publishKey = dotenv.env['STRIPE_PUBLISHABLE_KEY'] ?? '';
 
 const kPrimaryColor = Color(0xfff2f2f2);
-const kHomeColor = Color(0xff6053f8);
-
+const kMostUse = Color(0xff6053f8);
