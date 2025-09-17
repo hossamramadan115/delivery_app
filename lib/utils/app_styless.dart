@@ -33,4 +33,10 @@ abstract class AppStyless {
     color: Colors.black38,
     fontSize: 13,
   );
+
+  static TextStyle stylePrice = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+    color: Colors.green,
+  );
 }
