@@ -13,6 +13,12 @@ abstract class AppStyless {
     fontWeight: FontWeight.bold,
   );
 
+  static TextStyle styleSemiBold17 = TextStyle(
+    color: Colors.black,
+    fontSize: 17,
+    fontWeight: FontWeight.w500,
+  );
+
   static TextStyle styleWhiteBold22 = TextStyle(
     color: Colors.white,
     fontSize: 22,
