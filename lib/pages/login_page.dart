@@ -26,7 +26,6 @@ class _LoginPageState extends State<LoginPage> {
 
   void loginMethod() async {
     if (!formKey.currentState!.validate()) return;
-
     if (!mounted) return; // تأكيد قبل أي setState
     setState(() {
       isLoading = true;
@@ -53,13 +52,14 @@ class _LoginPageState extends State<LoginPage> {
 
         if (!mounted) return;
         showSuccessSnack(context, "Welcome back 👋");
-        GoRouter.of(context).push(AppRouter.kBottomBar);
+        context.go(AppRouter.kBottomBar);
       }
     } catch (e) {
-      if (!mounted) return;
+      // final errorMessage = e is String ? e : "An unexpected error occurred.";
+      // if (!mounted) return;
       showErrorSnack(context, e.toString());
     } finally {
-      if (!mounted) return;
+      // if (!mounted) return;
       setState(() {
         isLoading = false;
       });

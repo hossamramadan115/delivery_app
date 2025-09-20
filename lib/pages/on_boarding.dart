@@ -1,3 +1,4 @@
+import 'package:delivery/constsnt.dart';
 import 'package:delivery/utils/app_router.dart';
 import 'package:delivery/utils/app_styless.dart';
 import 'package:delivery/utils/assets.dart';
@@ -12,7 +13,7 @@ class OnBoarding extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffFCF7D7),
+      backgroundColor: const Color(0xffFCF4E2),
       body: SafeArea(
         child: Column(
           // crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,9 +49,9 @@ class OnBoarding extends StatelessWidget {
               children: [
                 CustomButton(
                   text: 'Track Now',
-                  buttonColor: Color(0xfff8ae39),
+                  buttonColor: kSignupcolor,
                   onTap: () {
-                    GoRouter.of(context).push(AppRouter.kSignupPage);
+                    GoRouter.of(context).pushReplacement(AppRouter.kSignupPage);
                   },
                 ),
               ],

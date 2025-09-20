@@ -45,9 +45,8 @@ class _SignUpPageState extends State<SignUpPage> {
       await SharedPreferencesHelper().saveUserId(id);
       await SharedPreferencesHelper().saveUserName(name.text.trim());
       await SharedPreferencesHelper().saveUserImage("");
-
       showSuccessSnack(context, "Account created successfully 🎉");
-      GoRouter.of(context).push(AppRouter.kBottomBar);
+      context.go(AppRouter.kBottomBar);
     } catch (e) {
       showErrorSnack(context, e.toString());
     } finally {

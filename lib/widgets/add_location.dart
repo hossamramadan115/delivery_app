@@ -39,11 +39,14 @@ class AddLocation extends StatelessWidget {
         ),
         SizedBox(height: context.screenHeight * .02),
         Center(
-          child: CustomButton(
-            text: 'Submit location',
-            buttonColor: kMostUse,
-            style: AppStyless.styleWhiteBold22.copyWith(fontSize: 16),
-            onTap: () {},
+          child: SizedBox(
+            width: context.screenWidth * .45,
+            child: CustomButton(
+              text: 'Submit location',
+              buttonColor: kMostUse,
+              style: AppStyless.styleWhiteBold22.copyWith(fontSize: 16),
+              onTap: () {},
+            ),
           ),
         ),
       ],
