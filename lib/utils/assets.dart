@@ -6,4 +6,5 @@ abstract class Assets {
   static const kFastDelivery = 'assets/images/fast_delivery.png';
   static const kParcel = 'assets/images/parcel.png';
   static const kDeliveryTruck = 'assets/images/delivery_truck.png';
+  static const kLoginSignup = 'assets/images/login_signup.png';
 }

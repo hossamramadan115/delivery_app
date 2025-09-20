@@ -39,4 +39,11 @@ abstract class AppStyless {
     fontWeight: FontWeight.bold,
     color: Colors.green,
   );
+
+  static TextStyle styleBold20 = TextStyle(
+    color: Colors.black,
+    fontSize: 28,
+    fontWeight: FontWeight.w500,
+  );
+  
 }

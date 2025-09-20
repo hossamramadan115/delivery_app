@@ -50,7 +50,7 @@ class OnBoarding extends StatelessWidget {
                   text: 'Track Now',
                   buttonColor: Color(0xfff8ae39),
                   onTap: () {
-                    GoRouter.of(context).push(AppRouter.kBottomBar);
+                    GoRouter.of(context).push(AppRouter.kSignupPage);
                   },
                 ),
               ],

@@ -9,7 +9,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    DeliveryApp(),
+  const  DeliveryApp(),
   );
 }
 

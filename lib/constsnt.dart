@@ -6,3 +6,5 @@ import 'package:flutter/material.dart';
 
 const kPrimaryColor = Color(0xfff2f2f2);
 const kMostUse = Color(0xff6053f8);
+const kSignupcolor = Color.fromARGB(255, 55, 93, 139);
+const kLoginColor = Color(0xffDB6A3A);
