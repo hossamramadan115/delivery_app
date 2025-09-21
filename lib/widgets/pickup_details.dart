@@ -7,10 +7,12 @@ class PickupDetails extends StatelessWidget {
     super.key,
     this.hintText,
     this.icon,
+    this.controller,
   });
 
   final String? hintText;
   final IconData? icon;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +22,7 @@ class PickupDetails extends StatelessWidget {
         SizedBox(width: context.screenWidth * .03),
         Expanded(
           child: TextField(
+            controller: controller,
             decoration: InputDecoration(
               hintText: hintText,
               hintStyle: const TextStyle(color: Colors.black54),
