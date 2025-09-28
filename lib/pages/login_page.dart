@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(height: height * 0.03),
                         Text(
                           'Email',
-                          style: AppStyless.styleBold20.copyWith(
+                          style: AppStyless.styleSemiBold28.copyWith(
                             fontSize: width * 0.045,
                           ),
                         ),
@@ -146,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(height: height * 0.03),
                         Text(
                           'Password',
-                          style: AppStyless.styleBold20.copyWith(
+                          style: AppStyless.styleSemiBold28.copyWith(
                             fontSize: width * 0.045,
                           ),
                         ),
@@ -178,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
                           children: [
                             Text(
                               'Sign in',
-                              style: AppStyless.styleBold20,
+                              style: AppStyless.styleSemiBold28,
                             ),
                             Spacer(),
                             LoginSignupButton(

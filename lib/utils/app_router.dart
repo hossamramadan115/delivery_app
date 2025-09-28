@@ -1,3 +1,4 @@
+import 'package:delivery/Admin/order_admin.dart';
 import 'package:delivery/pages/bottom_bar.dart';
 import 'package:delivery/pages/login_page.dart';
 import 'package:delivery/pages/on_boarding.dart';
@@ -9,6 +10,7 @@ abstract class AppRouter {
   static final kBottomBar = '/bottomBar';
   static final kSignupPage = '/signupPage';
   static final kLoginPage = '/loginPage';
+  static final kOrderAdmin = '/orderAdmin';
 
   static final router = GoRouter(
     routes: [
@@ -27,6 +29,10 @@ abstract class AppRouter {
       GoRoute(
         path: kLoginPage,
         builder: (context, state) => LoginPage(),
+      ),
+      GoRoute(
+        path: kOrderAdmin,
+        builder: (context, state) => OrderAdmin(),
       ),
     ],
   );

@@ -5,21 +5,31 @@ class CustomContainer extends StatelessWidget {
   const CustomContainer({
     super.key,
     this.child,
+    this.width,
+    this.height,
+    this.padding, this.color,
   });
   final Widget? child;
+  final double? width;
+  final double? height;
+  final EdgeInsetsGeometry? padding;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(
-          left: context.screenHeight * .02,
-          right: context.screenHeight * .02,
-          top: context.screenHeight * .02,
-          bottom: context.screenHeight * .03),
-      width: context.screenWidth,
+      padding: padding ?? EdgeInsets.all(context.screenHeight * .02),
+      //  EdgeInsets.all(
+      // left: context.screenHeight * .02,
+      // right: context.screenHeight * .02,
+      // top: context.screenHeight * .02,
+      // bottom: context.screenHeight * .02,
+      // ),
+      width: width ?? context.screenWidth,
+      height: height,
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        color:color?? Colors.white,
+        borderRadius: BorderRadius.circular(16),
       ),
       child: child,
     );

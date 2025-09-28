@@ -47,11 +47,6 @@ class AuthService {
       throw "An unexpected error occurred. Please try again.";
     }
   }
-  //     throw e.message ?? "Sign up failed";
-  //   } catch (e) {
-  //     throw "Unexpected error occurred";
-  //   }
-  // }
 
   Future<UserCredential?> login({
     required String email,

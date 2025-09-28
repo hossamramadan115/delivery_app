@@ -1,15 +1,17 @@
 import 'dart:convert';
 import 'package:delivery/constsnt.dart';
+import 'package:delivery/helper/show_snack_bar.dart';
+import 'package:delivery/models/order.dart';
 import 'package:delivery/utils/app_styless.dart';
 import 'package:delivery/utils/media_query_values.dart';
 import 'package:delivery/widgets/custom_button.dart';
 import 'package:delivery/widgets/custom_container.dart';
 import 'package:delivery/widgets/payment_wep_view.dart';
 import 'package:delivery/widgets/pickup_details.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
-
 
 class PickupDropoffDetails extends StatefulWidget {
   const PickupDropoffDetails({super.key});
@@ -28,7 +30,7 @@ class _PickupDropoffDetailsState extends State<PickupDropoffDetails> {
 
   bool _loading = false;
 
-  Future<void> startPayment() async {
+  Future<void> startPayment(OrderModel order) async {
     setState(() => _loading = true);
 
     try {
@@ -40,15 +42,14 @@ class _PickupDropoffDetailsState extends State<PickupDropoffDetails> {
       );
       final authToken = jsonDecode(authRes.body)["token"];
 
-      // 2) Create order
-      const amount = 100; // السعر (بالجنيه)
+      // 2) Create order in Paymob
       final orderRes = await http.post(
         Uri.parse("https://accept.paymob.com/api/ecommerce/orders"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "auth_token": authToken,
           "delivery_needed": "false",
-          "amount_cents": (amount * 100).toString(),
+          "amount_cents": (order.price * 100).toString(),
           "currency": "EGP",
           "items": []
         }),
@@ -61,17 +62,17 @@ class _PickupDropoffDetailsState extends State<PickupDropoffDetails> {
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "auth_token": authToken,
-          "amount_cents": (amount * 100).toString(),
+          "amount_cents": (order.price * 100).toString(),
           "expiration": 3600,
           "order_id": orderId,
           "billing_data": {
             "apartment": "NA",
-            "email": "test@example.com",
+            "email": FirebaseAuth.instance.currentUser?.email ?? "test@example.com",
             "floor": "NA",
-            "first_name": "Test",
+            "first_name": order.pickUpUserName,
             "street": "NA",
             "building": "NA",
-            "phone_number": "01000000000", // رقم تجريبي
+            "phone_number": order.pickUpPhone,
             "shipping_method": "NA",
             "postal_code": "NA",
             "city": "Cairo",
@@ -91,10 +92,13 @@ class _PickupDropoffDetailsState extends State<PickupDropoffDetails> {
 
       // 5) Open WebView
       if (!mounted) return;
-      Navigator.push(
+      await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => PaymentWebView(url: iframeUrl),
+          builder: (_) => PaymentWebView(
+            url: iframeUrl,
+            order: order, 
+          ),
         ),
       );
     } catch (e) {
@@ -111,13 +115,12 @@ class _PickupDropoffDetailsState extends State<PickupDropoffDetails> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        /// Pick-up
         CustomContainer(
           child: Column(
             children: [
-              Text(
-                'Pick-up details',
-                style: AppStyless.styleBold28.copyWith(fontSize: 22),
-              ),
+              Text('Pick-up details',
+                  style: AppStyless.styleBold28.copyWith(fontSize: 22)),
               SizedBox(height: context.screenHeight * .02),
               PickupDetails(
                 controller: pickUpAddress,
@@ -139,14 +142,15 @@ class _PickupDropoffDetailsState extends State<PickupDropoffDetails> {
             ],
           ),
         ),
+
         SizedBox(height: context.screenHeight * .04),
+
+        /// Drop-off
         CustomContainer(
           child: Column(
             children: [
-              Text(
-                'Drop-off details',
-                style: AppStyless.styleBold28.copyWith(fontSize: 22),
-              ),
+              Text('Drop-off details',
+                  style: AppStyless.styleBold28.copyWith(fontSize: 22)),
               SizedBox(height: context.screenHeight * .02),
               PickupDetails(
                 controller: drpOffAddress,
@@ -168,26 +172,51 @@ class _PickupDropoffDetailsState extends State<PickupDropoffDetails> {
             ],
           ),
         ),
+
         SizedBox(height: context.screenHeight * .03),
+
+        /// Price + Button
         CustomContainer(
           child: Row(
             children: [
               Column(
                 children: [
-                  Text(
-                    'Total price',
-                    style: AppStyless.styleSemiBold17,
-                  ),
-                  Text('\$150', style: AppStyless.stylePrice),
+                  Text('Total price', style: AppStyless.styleSemiBold17),
+                  Text('100 EGP', style: AppStyless.stylePrice),
                 ],
               ),
-              Spacer(),
+              const Spacer(),
               CustomButton(
-                text: 'Place order',
+                text: _loading ? 'Loading...' : 'Place order',
                 style: AppStyless.styleWhiteBold22.copyWith(fontSize: 16),
                 buttonColor: kMostUse,
-                onTap: startPayment,
-              )
+                onTap: _loading
+                    ? null
+                    : () async {
+                        if (pickUpAddress.text.isNotEmpty &&
+                            pickUpUserName.text.isNotEmpty &&
+                            pickUpPhone.text.isNotEmpty &&
+                            drpOffAddress.text.isNotEmpty &&
+                            dropOffUserName.text.isNotEmpty &&
+                            dropOffPhone.text.isNotEmpty) {
+                          final order = OrderModel(
+                            id: DateTime.now().millisecondsSinceEpoch.toString(),
+                            pickUpAddress: pickUpAddress.text,
+                            pickUpUserName: pickUpUserName.text,
+                            pickUpPhone: pickUpPhone.text,
+                            dropOffAddress: drpOffAddress.text,
+                            dropOffUserName: dropOffUserName.text,
+                            dropOffPhone: dropOffPhone.text,
+                            price: 100.0,
+                          );
+
+                          // ✅ الدفع فقط (Firestore هيتسجل بعد النجاح جوه PaymentWebView)
+                          await startPayment(order);
+                        } else {
+                          showErrorSnack(context, 'Please Fill Complete Details');
+                        }
+                      },
+              ),
             ],
           ),
         ),
@@ -195,78 +224,3 @@ class _PickupDropoffDetailsState extends State<PickupDropoffDetails> {
     );
   }
 }
-
-
-
-
-// String? email;
-  // late Razorpay _razorpay;
-  // int total = 0;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _razorpay = Razorpay();
-
-  //   _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-  //   _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-  //   _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
-
-  //   onLoad();
-  // }
-
-  // Future<void> getTheSharedPref() async {
-  //   email = await SharedPreferencesHelper().getUserEmail();
-  //   setState(() {}); // هنا مفيد عشان تحدث UI بعد جلب الايميل
-  // }
-
-  // Future<void> onLoad() async {
-  //   await getTheSharedPref();
-  // }
-
-  // void openCheckout(String amount, String email) {
-  //   var options = {
-  //     'key': 'RazorPayKey',
-  //     'amount': amount,
-  //     'name': 'Package Delivery App',
-  //     'description': 'Payment for your order',
-  //     'prefill': {'email': email},
-  //     'external': {
-  //       'wallets': ['paytm']
-  //     }
-  //   };
-
-  //   try {
-  //     _razorpay.open(options);
-  //   } catch (e) {
-  //     debugPrint('Error: $e');
-  //   }
-  // }
-
-  // void _handlePaymentSuccess(PaymentSuccessResponse response) {
-  //   showSuccessSnack(context, "Payment Success: ${response.paymentId}");
-  // }
-
-  // void _handlePaymentError(PaymentFailureResponse response) {
-  //   showErrorSnack(context, "Payment Failure: ${response.message}");
-  // }
-
-  // void _handleExternalWallet(ExternalWalletResponse response) {
-  //   showErrorSnack(context, "External Wallet: ${response.walletName}");
-  // }
-
-  // @override
-  // void dispose() {
-  //   _razorpay.clear();
-  //   super.dispose();
-  // }
-
-     //  () {
-                // if (email != null && email!.isNotEmpty) {
-                //   openCheckout((total * 100).toString(), email!);
-                //   // خد بالك: amount في Razorpay بيتحسب بالـ paisa (يعني لو 100 جنيه = 100 * 100 = 10000)
-                // } else {
-                //   showErrorSnack(
-                //       context, "Email not found, please login again.");
-                // }
-                // },

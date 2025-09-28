@@ -36,100 +36,88 @@ Future<DocumentSnapshot?> getUserByEmail(String email) async {
 }
 
 
-  Future<void> addProduct(
-    Map<String, dynamic> productInfoMap, String categoryName) async {
-  try {
-    await FirebaseFirestore.instance
-        .collection(categoryName)
-        .add(productInfoMap);
-
-    await FirebaseFirestore.instance
-        .collection("products")
-        .add(productInfoMap);
-  } catch (e) {
-    throw "Error saving product: $e";
-  }
-}
-
-
-  Stream<QuerySnapshot> getProducts(String category) {
+ // ================== من الصورة ==================
+  Future<void> addUserOrder(
+      Map<String, dynamic> userInfoMap, String id, String orderid) async {
     try {
-      return FirebaseFirestore.instance
-          .collection(category)
-          .orderBy("createdAt", descending: true)
-          .snapshots();
+      return await FirebaseFirestore.instance
+          .collection("users")
+          .doc(id)
+          .collection("Order")
+          .doc(orderid)
+          .set(userInfoMap);
     } catch (e) {
-      throw "Error fetching products: $e";
+      throw "Error saving user order: $e";
     }
   }
 
-  Stream<QuerySnapshot> getAllProducts() {
-  try {
-    return FirebaseFirestore.instance
-        .collection("products")
-        .orderBy("createdAt", descending: true)
-        .snapshots();
-  } catch (e) {
-    throw "Error fetching all products: $e";
-  }
-}
-
-
-  Future<void> addOrderDetails(Map<String, dynamic> orderInfoMap) async {
+  Future<void> addAdminOrder(
+      Map<String, dynamic> userInfoMap, String id) async {
     try {
-      await FirebaseFirestore.instance.collection("Orders").add(orderInfoMap);
+      return await FirebaseFirestore.instance
+          .collection("Order")
+          .doc(id)
+          .set(userInfoMap);
     } catch (e) {
-      throw "Error saving order: $e";
+      throw "Error saving admin order: $e";
     }
   }
 
-Stream<QuerySnapshot> getOrders(String? email) {
-  try {
-    if (email == null) {
-      throw "User is not logged in";
-    }
+//   Future<void> addOrderDetails(Map<String, dynamic> orderInfoMap) async {
+//     try {
+//       await FirebaseFirestore.instance.collection("Orders").add(orderInfoMap);
+//     } catch (e) {
+//       throw "Error saving order: $e";
+//     }
+//   }
 
-    return FirebaseFirestore.instance
-        .collection("Orders")
-        .where("Email", isEqualTo: email)
-        .snapshots();
-  } catch (e) {
-    throw "Error fetching orders: $e";
-  }
-}
+// Stream<QuerySnapshot> getOrders(String? email) {
+//   try {
+//     if (email == null) {
+//       throw "User is not logged in";
+//     }
 
-  Stream<QuerySnapshot> getAllOrders() {
-    try {
-      return FirebaseFirestore.instance
-          .collection("Orders")
-          .orderBy("createdAt", descending: true)
-          .snapshots();
-    } catch (e) {
-      throw "Error fetching all orders: $e";
-    }
-  }
+//     return FirebaseFirestore.instance
+//         .collection("Orders")
+//         .where("Email", isEqualTo: email)
+//         .snapshots();
+//   } catch (e) {
+//     throw "Error fetching orders: $e";
+//   }
+// }
 
-  Future<void> updateOrderStatus(String orderId, String newStatus) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection("Orders")
-          .doc(orderId)
-          .update({"Status": newStatus});
-    } catch (e) {
-      throw "Error updating order status: $e";
-    }
-  }
+//   Stream<QuerySnapshot> getAllOrders() {
+//     try {
+//       return FirebaseFirestore.instance
+//           .collection("Orders")
+//           .orderBy("createdAt", descending: true)
+//           .snapshots();
+//     } catch (e) {
+//       throw "Error fetching all orders: $e";
+//     }
+//   }
 
-  Future<void> deleteOrder(String orderId) async {
-  try {
-    await FirebaseFirestore.instance
-        .collection("Orders")
-        .doc(orderId)
-        .delete();
-  } catch (e) {
-    throw "Error deleting order: $e";
-  }
-}
+//   Future<void> updateOrderStatus(String orderId, String newStatus) async {
+//     try {
+//       await FirebaseFirestore.instance
+//           .collection("Orders")
+//           .doc(orderId)
+//           .update({"Status": newStatus});
+//     } catch (e) {
+//       throw "Error updating order status: $e";
+//     }
+//   }
+
+//   Future<void> deleteOrder(String orderId) async {
+//   try {
+//     await FirebaseFirestore.instance
+//         .collection("Orders")
+//         .doc(orderId)
+//         .delete();
+//   } catch (e) {
+//     throw "Error deleting order: $e";
+//   }
+// }
 
 
     Future<void> deleteUser(String id) async {
@@ -139,4 +127,42 @@ Stream<QuerySnapshot> getOrders(String? email) {
       throw "Error deleting user: $e";
     }
   }
+
+//    Future<void> addProduct(
+//     Map<String, dynamic> productInfoMap, String categoryName) async {
+//   try {
+//     await FirebaseFirestore.instance
+//         .collection(categoryName)
+//         .add(productInfoMap);
+
+//     await FirebaseFirestore.instance
+//         .collection("products")
+//         .add(productInfoMap);
+//   } catch (e) {
+//     throw "Error saving product: $e";
+//   }
+// }
+
+
+//   Stream<QuerySnapshot> getProducts(String category) {
+//     try {
+//       return FirebaseFirestore.instance
+//           .collection(category)
+//           .orderBy("createdAt", descending: true)
+//           .snapshots();
+//     } catch (e) {
+//       throw "Error fetching products: $e";
+//     }
+//   }
+
+//   Stream<QuerySnapshot> getAllProducts() {
+//   try {
+//     return FirebaseFirestore.instance
+//         .collection("products")
+//         .orderBy("createdAt", descending: true)
+//         .snapshots();
+//   } catch (e) {
+//     throw "Error fetching all products: $e";
+//   }
+// }
 }

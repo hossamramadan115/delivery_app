@@ -47,7 +47,6 @@ class _SignUpPageState extends State<SignUpPage> {
       await SharedPreferencesHelper().saveUserImage("");
       showSuccessSnack(context, "Account created successfully 🎉");
       context.go(AppRouter.kBottomBar);
-      
     } catch (e) {
       showErrorSnack(context, e.toString());
     } finally {
@@ -158,7 +157,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           children: [
                             Text(
                               'Sign up',
-                              style: AppStyless.styleBold20,
+                              style: AppStyless.styleSemiBold28,
                             ),
                             Spacer(),
                             LoginSignupButton(
