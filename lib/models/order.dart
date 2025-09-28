@@ -11,8 +11,10 @@ class OrderModel {
   final DateTime createdAt;
   final String status;
   final int? currentStep;
+  final String ?track;
 
-  OrderModel({
+  OrderModel( {
+    this.track,
     required this.id,
     this.orderNumber,
     required this.pickUpAddress,

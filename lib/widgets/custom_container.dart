@@ -7,13 +7,16 @@ class CustomContainer extends StatelessWidget {
     this.child,
     this.width,
     this.height,
-    this.padding, this.color,
+    this.padding,
+    this.color,
+    this.borderRadius,
   });
   final Widget? child;
   final double? width;
   final double? height;
   final EdgeInsetsGeometry? padding;
   final Color? color;
+  final BorderRadiusGeometry? borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +31,8 @@ class CustomContainer extends StatelessWidget {
       width: width ?? context.screenWidth,
       height: height,
       decoration: BoxDecoration(
-        color:color?? Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        color: color ?? Colors.white,
+        borderRadius: borderRadius ?? BorderRadius.circular(16),
       ),
       child: child,
     );

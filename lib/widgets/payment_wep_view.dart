@@ -61,6 +61,7 @@ class _PaymentWebViewState extends State<PaymentWebView> {
               "CreatedAt": FieldValue.serverTimestamp(),
               "UserId": userId,
               "Email": email,
+              "Tracker":-1,
             };
 
             if (userId != null) {

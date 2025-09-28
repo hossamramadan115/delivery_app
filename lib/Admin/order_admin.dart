@@ -1,6 +1,8 @@
 import 'package:delivery/constsnt.dart';
 import 'package:delivery/utils/app_styless.dart';
+import 'package:delivery/utils/assets.dart';
 import 'package:delivery/utils/media_query_values.dart';
+import 'package:delivery/widgets/custom_container.dart';
 import 'package:flutter/material.dart';
 
 class OrderAdmin extends StatefulWidget {
@@ -15,7 +17,7 @@ class _OrderAdminState extends State<OrderAdmin> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kMostUse,
-      resizeToAvoidBottomInset: true, // ✅ عشان لما الكيبورد يفتح ميبوش الحاجة
+      // resizeToAvoidBottomInset: true,
       body: Column(
         children: [
           SizedBox(height: context.screenHeight * 0.05),
@@ -39,10 +41,68 @@ class _OrderAdminState extends State<OrderAdmin> {
                   child: Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: context.screenHeight * .016,
+                      vertical: context.screenHeight * .03,
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [],
+                    child: CustomContainer(
+                      borderRadius: BorderRadius.circular(30),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Center(
+                            child: Image.asset(
+                              Assets.kParcel,
+                              height: context.screenHeight * .15,
+                            ),
+                          ),
+                          Text(
+                            'Drop-Off Details',
+                            style: AppStyless.styleSemiBold17,
+                          ),
+                          Text(
+                            'Adress: sera alliana',
+                            style:
+                                AppStyless.styleBold18.copyWith(fontSize: 16),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                          ),
+                          Text(
+                            'Name: hossam ramadan ',
+                            style:
+                                AppStyless.styleBold18.copyWith(fontSize: 16),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            'Phone: 01019148497',
+                            style:
+                                AppStyless.styleBold18.copyWith(fontSize: 16),
+                          ),
+                          SizedBox(height: context.screenHeight * .02),
+                          Text(
+                            'Pick-Up Details',
+                            style: AppStyless.styleSemiBold17,
+                          ),
+                          Text(
+                            'Adress: sera alliana',
+                            style:
+                                AppStyless.styleBold18.copyWith(fontSize: 16),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                          ),
+                          Text(
+                            'Name: hossam ramadan',
+                            style:
+                                AppStyless.styleBold18.copyWith(fontSize: 16),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            'Phone: 01019148497',
+                            style:
+                                AppStyless.styleBold18.copyWith(fontSize: 16),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

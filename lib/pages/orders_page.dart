@@ -101,6 +101,7 @@ class _OrdersPageState extends State<OrdersPage> {
                           final orders = docs.map((doc) {
                             final data = doc.data() as Map<String, dynamic>;
                             return OrderModel(
+                              track: data["Track"]??"",
                               id: doc.id,
                               orderNumber: data["OrderId"] ?? "",
                               pickUpAddress: data["PickupAddress"] ?? "",
