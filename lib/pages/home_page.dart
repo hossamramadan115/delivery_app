@@ -1,13 +1,98 @@
 import 'package:delivery/constsnt.dart';
 import 'package:delivery/utils/app_styless.dart';
 import 'package:delivery/utils/media_query_values.dart';
-import 'package:delivery/widgets/all_custom_delivers_section.dart';
 import 'package:delivery/widgets/track_your_shipment_section.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart'; // Import for placemarkFromCoordinates
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  // 1. Declare state variables to hold location data
+  String currentAddress = "Getting location...";
+  Position? currentPosition;
+
+  @override
+  void initState() {
+    super.initState();
+    // 2. Call the location logic when the widget is created
+    getLocation();
+  }
+
+  // ----------------------------------------------------------
+  // MOVED LOCATION FUNCTIONS INSIDE THE STATE CLASS
+  // ----------------------------------------------------------
+
+  Future<void> _getAddressFromLatLng(Position position) async {
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+
+      Placemark place = placemarks[0];
+
+      if (!mounted) return;
+      setState(() {
+        currentAddress =
+            '${place.street}, ${place.locality}, ${place.administrativeArea}';
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        currentAddress = "Error fetching address.";
+      });
+    }
+  }
+
+  Future<void> getLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      if (!mounted) return;
+      setState(() {
+        currentAddress = "Location services are disabled.";
+      });
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        if (!mounted) return;
+        setState(() {
+          currentAddress = "Location permissions are denied.";
+        });
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      if (!mounted) return;
+      setState(() {
+        currentAddress = "Location permissions are permanently denied.";
+      });
+      return;
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    if (!mounted) return;
+    setState(() {
+      currentPosition = position;
+    });
+
+    _getAddressFromLatLng(position);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +101,7 @@ class HomePage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Container(
           margin: EdgeInsets.only(
-              top: context.screenHeight * 0.05, right: 16, left: 16),
+              top: context.screenHeight * 0.02, right: 16, left: 16),
           child: Column(
             children: [
               Row(
@@ -33,14 +118,17 @@ class HomePage extends StatelessWidget {
                   ),
                 ],
               ),
+              // 3. Display the actual currentAddress state variable
               Text(
-                'City name : sers ellian',
+                currentAddress.length > 60
+                    ? '${currentAddress.substring(0, 60)}...'
+                    : currentAddress,
                 style: AppStyless.styleBold28.copyWith(fontSize: 20),
+                textAlign: TextAlign.center,
               ),
+
               SizedBox(height: context.screenHeight * .015),
               TrackYourShipmentSection(),
-              SizedBox(height: context.screenHeight * .03),
-              AllCustomDeliversSection(),
               SizedBox(height: context.screenHeight * .08),
             ],
           ),

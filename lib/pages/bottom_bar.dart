@@ -32,7 +32,7 @@ class _BottomBarState extends State<BottomBar> {
     final iconSize = screenWidth * 0.08;
 
     return SafeArea(
-      top: false,
+      top: true,
       left: false,
       right: false,
       bottom: true,

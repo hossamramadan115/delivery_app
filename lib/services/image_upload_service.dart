@@ -1,31 +1,31 @@
-// import 'dart:convert';
-// import 'dart:io';
-// import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
 
-// class ImageUploadService {
-//   final String apiKey = "42ca111207b9d4ca04f847a4d847acb2";
+class ImageUploadService {
+  final String apiKey = "42ca111207b9d4ca04f847a4d847acb2";
 
-//   Future<String?> uploadImageToImgbb(File imageFile) async {
-//     try {
-//       final request = http.MultipartRequest(
-//         "POST",
-//         Uri.parse("https://api.imgbb.com/1/upload?key=$apiKey"),
-//       );
+  Future<String?> uploadImageToImgbb(File imageFile) async {
+    try {
+      final request = http.MultipartRequest(
+        "POST",
+        Uri.parse("https://api.imgbb.com/1/upload?key=$apiKey"),
+      );
 
-//       request.files.add(await http.MultipartFile.fromPath("image", imageFile.path));
+      request.files.add(await http.MultipartFile.fromPath("image", imageFile.path));
 
-//       final response = await request.send();
-//       final resBody = await response.stream.bytesToString();
-//       final data = jsonDecode(resBody);
+      final response = await request.send();
+      final resBody = await response.stream.bytesToString();
+      final data = jsonDecode(resBody);
 
-//       if (response.statusCode == 200) {
-//         return data["data"]["url"]; // 🔗 الرابط المباشر للصورة
-//       } else {
-//         throw "Upload failed: ${data['error']['message']}";
-//       }
-//     } catch (e) {
-//       throw "Error uploading image: $e";
-//     }
-//   }
-// }
+      if (response.statusCode == 200) {
+        return data["data"]["url"]; // 🔗 الرابط المباشر للصورة
+      } else {
+        throw "Upload failed: ${data['error']['message']}";
+      }
+    } catch (e) {
+      throw "Error uploading image: $e";
+    }
+  }
+}
 

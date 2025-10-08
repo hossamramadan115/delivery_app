@@ -13,30 +13,28 @@ class DatabaseMethods {
     }
   }
 
-
-Future<DocumentSnapshot> getUserDetails(String id) async {
-  try {
-    return await usersCollection.doc(id).get();
-  } catch (e) {
-    throw "Error fetching user data: $e";
-  }
-}
-
-
-Future<DocumentSnapshot?> getUserByEmail(String email) async {
-  try {
-    final snapshot = await usersCollection.where("email", isEqualTo: email).get();
-    if (snapshot.docs.isNotEmpty) {
-      return snapshot.docs.first;
+  Future<DocumentSnapshot> getUserDetails(String id) async {
+    try {
+      return await usersCollection.doc(id).get();
+    } catch (e) {
+      throw "Error fetching user data: $e";
     }
-    return null;
-  } catch (e) {
-    throw "Error fetching user by email: $e";
   }
-}
 
+  Future<DocumentSnapshot?> getUserByEmail(String email) async {
+    try {
+      final snapshot =
+          await usersCollection.where("email", isEqualTo: email).get();
+      if (snapshot.docs.isNotEmpty) {
+        return snapshot.docs.first;
+      }
+      return null;
+    } catch (e) {
+      throw "Error fetching user by email: $e";
+    }
+  }
 
- // ================== من الصورة ==================
+  // ================== من الصورة ==================
   Future<void> addUserOrder(
       Map<String, dynamic> userInfoMap, String id, String orderid) async {
     try {
@@ -62,6 +60,36 @@ Future<DocumentSnapshot?> getUserByEmail(String email) async {
       throw "Error saving admin order: $e";
     }
   }
+
+  Future<Stream<QuerySnapshot>> getAdminOrders() async {
+    return await FirebaseFirestore.instance.collection("Order").snapshots();
+  }
+
+  Future<void> updateOrderTracker(String orderId, int updateTracker) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("Order")
+          .doc(orderId)
+          .update({"Tracker": updateTracker});
+    } catch (e) {
+      throw "Error updating order tracker: $e";
+    }
+  }
+
+  Future<void> updateUserTracker(
+      String id, int updateTracker, String orderId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(id)
+          .collection("Order")
+          .doc(orderId)
+          .update({"Tracker": updateTracker});
+    } catch (e) {
+      throw "Error updating order tracker: $e";
+    }
+  }
+
 
 //   Future<void> addOrderDetails(Map<String, dynamic> orderInfoMap) async {
 //     try {
@@ -119,8 +147,7 @@ Future<DocumentSnapshot?> getUserByEmail(String email) async {
 //   }
 // }
 
-
-    Future<void> deleteUser(String id) async {
+  Future<void> deleteUser(String id) async {
     try {
       await usersCollection.doc(id).delete();
     } catch (e) {
@@ -142,7 +169,6 @@ Future<DocumentSnapshot?> getUserByEmail(String email) async {
 //     throw "Error saving product: $e";
 //   }
 // }
-
 
 //   Stream<QuerySnapshot> getProducts(String category) {
 //     try {

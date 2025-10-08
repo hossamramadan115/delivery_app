@@ -16,7 +16,7 @@ class PostPage extends StatelessWidget {
       resizeToAvoidBottomInset: true, // ✅ عشان لما الكيبورد يفتح ميبوش الحاجة
       body: Column(
         children: [
-          SizedBox(height: context.screenHeight * 0.05),
+          SizedBox(height: context.screenHeight * 0.03),
           Center(
             child: Text(
               'Add package',

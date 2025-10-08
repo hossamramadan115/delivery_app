@@ -9,7 +9,7 @@ class CustomContainer extends StatelessWidget {
     this.height,
     this.padding,
     this.color,
-    this.borderRadius,
+    this.borderRadius, this.margin,
   });
   final Widget? child;
   final double? width;
@@ -17,10 +17,11 @@ class CustomContainer extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final Color? color;
   final BorderRadiusGeometry? borderRadius;
+  final EdgeInsetsGeometry? margin;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Container(margin: margin,
       padding: padding ?? EdgeInsets.all(context.screenHeight * .02),
       //  EdgeInsets.all(
       // left: context.screenHeight * .02,

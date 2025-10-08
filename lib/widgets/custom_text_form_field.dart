@@ -13,6 +13,7 @@ class CustomTextFormField extends StatelessWidget {
     this.controller,
     this.useBorder = false,
     this.backgroundColor,
+    this.suffixIcon,
   });
 
   final String? hintText;
@@ -25,6 +26,7 @@ class CustomTextFormField extends StatelessWidget {
   final TextEditingController? controller;
   final bool useBorder;
   final Color? backgroundColor;
+  final Widget? suffixIcon;
   // final int? maxLines;
 
   @override
@@ -44,6 +46,7 @@ class CustomTextFormField extends StatelessWidget {
         onChanged: onChanged,
         style: const TextStyle(color: Colors.black),
         decoration: InputDecoration(
+          suffixIcon: suffixIcon != null ? suffixIcon : null,
           prefixIcon: icon != null ? Icon(icon, color: iconColor) : null,
           label: label,
           hintText: hintText,

@@ -1,8 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:delivery/Admin/orde_status.dart';
 import 'package:delivery/constsnt.dart';
+import 'package:delivery/services/database_service.dart';
 import 'package:delivery/utils/app_styless.dart';
-import 'package:delivery/utils/assets.dart';
 import 'package:delivery/utils/media_query_values.dart';
-import 'package:delivery/widgets/custom_container.dart';
 import 'package:flutter/material.dart';
 
 class OrderAdmin extends StatefulWidget {
@@ -13,103 +14,144 @@ class OrderAdmin extends StatefulWidget {
 }
 
 class _OrderAdminState extends State<OrderAdmin> {
+  Stream? orderStream;
+
+  getOnTheLoad() async {
+    orderStream = await DatabaseMethods().getAdminOrders();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    getOnTheLoad();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: kMostUse,
-      // resizeToAvoidBottomInset: true,
-      body: Column(
-        children: [
-          SizedBox(height: context.screenHeight * 0.05),
-          Center(
-            child: Text(
-              'Add package',
-              style: AppStyless.styleWhiteBold22,
-            ),
-          ),
-          SizedBox(height: context.screenHeight * .015),
-          Expanded(
-            child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(30),
-                topRight: Radius.circular(30),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: kMostUse,
+        body: Column(
+          children: [
+            SizedBox(height: context.screenHeight * 0.03),
+            Center(
+              child: Text(
+                'Add package',
+                style: AppStyless.styleWhiteBold22,
               ),
-              child: Container(
-                color: kPrimaryColor,
-                width: context.screenWidth,
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: context.screenHeight * .016,
-                      vertical: context.screenHeight * .03,
-                    ),
-                    child: CustomContainer(
-                      borderRadius: BorderRadius.circular(30),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Center(
-                            child: Image.asset(
-                              Assets.kParcel,
-                              height: context.screenHeight * .15,
-                            ),
-                          ),
-                          Text(
-                            'Drop-Off Details',
-                            style: AppStyless.styleSemiBold17,
-                          ),
-                          Text(
-                            'Adress: sera alliana',
-                            style:
-                                AppStyless.styleBold18.copyWith(fontSize: 16),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            softWrap: true,
-                          ),
-                          Text(
-                            'Name: hossam ramadan ',
-                            style:
-                                AppStyless.styleBold18.copyWith(fontSize: 16),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            'Phone: 01019148497',
-                            style:
-                                AppStyless.styleBold18.copyWith(fontSize: 16),
-                          ),
-                          SizedBox(height: context.screenHeight * .02),
-                          Text(
-                            'Pick-Up Details',
-                            style: AppStyless.styleSemiBold17,
-                          ),
-                          Text(
-                            'Adress: sera alliana',
-                            style:
-                                AppStyless.styleBold18.copyWith(fontSize: 16),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            softWrap: true,
-                          ),
-                          Text(
-                            'Name: hossam ramadan',
-                            style:
-                                AppStyless.styleBold18.copyWith(fontSize: 16),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            'Phone: 01019148497',
-                            style:
-                                AppStyless.styleBold18.copyWith(fontSize: 16),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+            ),
+            SizedBox(height: context.screenHeight * .015),
+            Expanded(
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
+                child: Container(
+                  color: kPrimaryColor,
+                  width: context.screenWidth,
+                  child: orderStream == null
+                      ? const Center(child: CircularProgressIndicator())
+                      : StreamBuilder(
+                          stream: orderStream,
+                          builder: (context, AsyncSnapshot snapshot) {
+                            if (!snapshot.hasData) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            }
+
+                            return ListView.builder(
+                              padding:
+                                  EdgeInsets.only(top: 24, left: 16, right: 16),
+                              itemCount: snapshot.data.docs.length,
+                              itemBuilder: (context, index) {
+                                DocumentSnapshot ds = snapshot.data.docs[index];
+
+                                return OrdeStatus(
+                                  dropoffAddress: ds["DropoffAddress"],
+                                  dropoffPhone: ds["DropoffPhone"],
+                                  dropoffUserName: ds["DropoffUserName"],
+                                  pickupAddress: ds["PickupAddress"],
+                                  pickupPhone: ds["PickupPhone"],
+                                  pickupUserName: ds["PickupUserName"],
+                                  price: ds["Price"],
+                                  tracker: ds["Tracker"],
+                                  button1: () async {
+                                    int updateTraker = ds["Tracker"];
+                                    updateTraker = updateTraker + 1;
+
+                                    await DatabaseMethods().updateOrderTracker(
+                                      ds.id,
+                                      updateTraker,
+                                    );
+                                    await DatabaseMethods().updateUserTracker(
+                                        ds["UserId"],
+                                        updateTraker,
+                                        ds["OrderId"]);
+                                  },
+                                  button2: () async {
+                                    int updateTraker = ds["Tracker"];
+                                    updateTraker = updateTraker + 1;
+
+                                    await DatabaseMethods().updateOrderTracker(
+                                      ds.id, // orderId (زي ORD-ko7OS3cT)
+                                      updateTraker, // القيمة الجديدة
+                                    );
+                                    await DatabaseMethods().updateUserTracker(
+                                        ds["UserId"],
+                                        updateTraker,
+                                        ds["OrderId"]);
+                                  },
+                                  button3: () async {
+                                    int updateTraker = ds["Tracker"];
+                                    updateTraker = updateTraker + 1;
+
+                                    await DatabaseMethods().updateOrderTracker(
+                                      ds.id,
+                                      updateTraker,
+                                    );
+                                    await DatabaseMethods().updateUserTracker(
+                                        ds["UserId"],
+                                        updateTraker,
+                                        ds["OrderId"]);
+                                  },
+                                  button4: () async {
+                                    int updateTraker = ds["Tracker"];
+                                    updateTraker = updateTraker + 1;
+
+                                    await DatabaseMethods().updateOrderTracker(
+                                      ds.id,
+                                      updateTraker,
+                                    );
+                                    await DatabaseMethods().updateUserTracker(
+                                        ds["UserId"],
+                                        updateTraker,
+                                        ds["OrderId"]);
+                                  },
+                                  button5: () async {
+                                    int updateTraker = ds["Tracker"];
+                                    updateTraker = updateTraker + 1;
+
+                                    await DatabaseMethods().updateOrderTracker(
+                                      ds.id,
+                                      updateTraker,
+                                    );
+                                    await DatabaseMethods().updateUserTracker(
+                                        ds["UserId"],
+                                        updateTraker,
+                                        ds["OrderId"]);
+                                  },
+                                );
+                              },
+                            );
+                          },
+                        ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

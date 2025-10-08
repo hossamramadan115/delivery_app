@@ -9,12 +9,14 @@ class CustomButton extends StatefulWidget {
     required this.text,
     this.buttonColor,
     this.style,
+    this.margin,
   });
 
   final Function()? onTap;
   final String text;
   final Color? buttonColor;
   final TextStyle? style;
+  final EdgeInsetsGeometry? margin;
 
   @override
   State<CustomButton> createState() => _CustomButtonState();
@@ -33,6 +35,7 @@ class _CustomButtonState extends State<CustomButton> {
       onTapCancel: () => setState(() => _isPressed = false),
       onTap: widget.onTap,
       child: AnimatedContainer(
+        margin: widget.margin,
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeOut,
         transform: Matrix4.identity()
@@ -63,7 +66,10 @@ class _CustomButtonState extends State<CustomButton> {
                 AppStyless.styleWhiteBold22.copyWith(
                   color: _isPressed ? Colors.white70 : Colors.white,
                 ),
-            child: Text(widget.text),
+            child: Text(
+              widget.text,
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
       ),
