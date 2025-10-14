@@ -27,6 +27,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String? image, name, email, id;
   File? selectedImage;
   bool isLoading = false;
+  bool isLoadingData = true; // ✅ عشان نعرف هل البيانات لسه بتتحمل
 
   @override
   void initState() {
@@ -39,7 +40,9 @@ class _ProfilePageState extends State<ProfilePage> {
     name = await SharedPreferencesHelper().getUserName();
     email = await SharedPreferencesHelper().getUserEmail();
     id = await SharedPreferencesHelper().getUserId();
-    setState(() {});
+    setState(() {
+      isLoadingData = false; // ✅ البيانات خلص تحميلها
+    });
   }
 
   Future<void> pickImage() async {
@@ -67,7 +70,7 @@ class _ProfilePageState extends State<ProfilePage> {
       // 🔵 تحديث الصورة في Firestore
       await FirebaseFirestore.instance
           .collection("users")
-          .doc(id) // 🟢 نستخدم random id المخزن
+          .doc(id)
           .update({"image": imageUrl});
 
       // 🔵 تحديث SharedPreferences
@@ -93,6 +96,16 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+
+    // ✅ لو البيانات لسه بتتحمل، اعرض Loading فقط
+    if (isLoadingData) {
+      return const Scaffold(
+        backgroundColor: kPrimaryColor,
+        body: Center(
+          child: CircularProgressIndicator(color: Colors.blue),
+        ),
+      );
+    }
 
     return SafeArea(
       child: Scaffold(
@@ -155,6 +168,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     onConfirm: () async {
                       await AuthService().signOut();
                       await SharedPreferencesHelper().clearAll();
+                      if (!mounted) return;
                       GoRouter.of(context).go(AppRouter.kOnBoarding);
                     },
                   );
@@ -182,6 +196,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           final userId = doc["id"];
                           await AuthService().deleteAccount(userId);
                           await SharedPreferencesHelper().clearAll();
+                          if (!mounted) return;
                           GoRouter.of(context).go(AppRouter.kOnBoarding);
                         }
                       } catch (e) {

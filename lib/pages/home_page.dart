@@ -5,7 +5,8 @@ import 'package:delivery/widgets/track_your_shipment_section.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart'; // Import for placemarkFromCoordinates
+import 'package:geocoding/geocoding.dart';
+import 'package:delivery/services/shared_preferences_helper.dart'; // ✅ علشان نخزّن العنوان
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,20 +16,29 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // 1. Declare state variables to hold location data
   String currentAddress = "Getting location...";
   Position? currentPosition;
 
   @override
   void initState() {
     super.initState();
-    // 2. Call the location logic when the widget is created
-    getLocation();
+    loadSavedOrFetchLocation();
   }
 
-  // ----------------------------------------------------------
-  // MOVED LOCATION FUNCTIONS INSIDE THE STATE CLASS
-  // ----------------------------------------------------------
+  /// ✅ أولاً: نحاول نجيب العنوان المخزَّن، لو مش موجود نجيب اللوكيشن الحقيقي
+  Future<void> loadSavedOrFetchLocation() async {
+    final prefs = SharedPreferencesHelper();
+    final savedAddress = await prefs.getSavedLocation();
+
+    if (savedAddress != null && savedAddress.isNotEmpty) {
+      if (!mounted) return;
+      setState(() {
+        currentAddress = savedAddress;
+      });
+    } else {
+      getLocation(); // مفيش عنوان محفوظ → نجيب اللوكيشن الجديد
+    }
+  }
 
   Future<void> _getAddressFromLatLng(Position position) async {
     try {
@@ -36,12 +46,16 @@ class _HomePageState extends State<HomePage> {
           await placemarkFromCoordinates(position.latitude, position.longitude);
 
       Placemark place = placemarks[0];
+      final address =
+          '${place.street}, ${place.locality}, ${place.administrativeArea}';
 
       if (!mounted) return;
       setState(() {
-        currentAddress =
-            '${place.street}, ${place.locality}, ${place.administrativeArea}';
+        currentAddress = address;
       });
+
+      // ✅ نحفظ العنوان في SharedPreferences
+      await SharedPreferencesHelper().saveLocation(address);
     } catch (e) {
       if (!mounted) return;
       setState(() {
@@ -101,24 +115,17 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         child: Container(
           margin: EdgeInsets.only(
-              top: context.screenHeight * 0.02, right: 16, left: 16),
+              top: context.screenHeight * 0.04, right: 16, left: 16),
           child: Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    FontAwesomeIcons.locationDot,
-                    color: kMostUse,
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    'current location',
-                    style: AppStyless.styleBold18,
-                  ),
+                  Icon(FontAwesomeIcons.locationDot, color: kMostUse),
+                  const SizedBox(width: 10),
+                  Text('Current location', style: AppStyless.styleBold18),
                 ],
               ),
-              // 3. Display the actual currentAddress state variable
               Text(
                 currentAddress.length > 60
                     ? '${currentAddress.substring(0, 60)}...'
@@ -126,7 +133,6 @@ class _HomePageState extends State<HomePage> {
                 style: AppStyless.styleBold28.copyWith(fontSize: 20),
                 textAlign: TextAlign.center,
               ),
-
               SizedBox(height: context.screenHeight * .015),
               TrackYourShipmentSection(),
               SizedBox(height: context.screenHeight * .08),

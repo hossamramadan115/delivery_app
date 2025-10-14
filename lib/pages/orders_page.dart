@@ -40,7 +40,7 @@ class _OrdersPageState extends State<OrdersPage> {
           ),
           Column(
             children: [
-              SizedBox(height: context.screenHeight * .02),
+              SizedBox(height: context.screenHeight * .04),
               Text("Orders",
                   style: AppStyless.styleBold28.copyWith(color: Colors.white)),
               SizedBox(height: context.screenHeight * .03),

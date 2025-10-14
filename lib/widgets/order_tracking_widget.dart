@@ -1,5 +1,7 @@
 import 'package:delivery/constsnt.dart';
+import 'package:delivery/helper/show_custom_dialog.dart';
 import 'package:delivery/models/order.dart';
+import 'package:delivery/services/database_service.dart';
 import 'package:delivery/utils/media_query_values.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -48,14 +50,66 @@ class OrderTrackingWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// 🔹 تفاصيل الأوردر (اللي إنت عاوزها)
-            Text(
-              "Order #${order.track}",
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+            /// 🔹 العنوان + زر الحذف
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Order #${order.track}",
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(FontAwesomeIcons.xmark, color: Colors.black),
+                  onPressed: () async {
+                    showCustomDialog(
+                      context: context,
+                      title: "Delete Confirmation",
+                      content:
+                          "Are you sure you want to delete this order? This action cannot be undone.",
+                      confirmText: "Delete",
+                      onConfirm: () async {
+                        final messenger = ScaffoldMessenger.of(context);
+
+                        try {
+                          await DatabaseMethods().deleteOrder(order.id);
+
+                          // تأجيل تنفيذ الـ pop عشان ما يحصلش تداخل مع النظام
+                          Future.delayed(Duration.zero, () {
+                            if (context.mounted) {
+                              Navigator.of(context, rootNavigator: true).pop();
+                            }
+                          });
+
+                          if (context.mounted) {
+                            messenger.showSnackBar(
+                              const SnackBar(
+                                  content:
+                                      Text("✅ Order deleted successfully")),
+                            );
+                          }
+                        } catch (e) {
+                          Future.delayed(Duration.zero, () {
+                            if (context.mounted) {
+                              Navigator.of(context, rootNavigator: true).pop();
+                            }
+                          });
+
+                          if (context.mounted) {
+                            messenger.showSnackBar(
+                              SnackBar(content: Text("❌ Error: $e")),
+                            );
+                          }
+                        }
+                      },
+                    );
+                  },
+                )
+              ],
             ),
+
             const SizedBox(height: 4),
             Text(
               "${order.pickUpAddress} → ${order.dropOffAddress}",

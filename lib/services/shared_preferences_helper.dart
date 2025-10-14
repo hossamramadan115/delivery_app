@@ -8,6 +8,17 @@ class SharedPreferencesHelper {
   static String isFirstTimeKey = 'ISFIRSTTIMEKEY';
   static String isLoggedInKey = 'ISLOGGEDINKEY';
   static String isAdminLoggedInKey = 'ISADMINLOGGEDINKEY';
+  static String userLocationKey = 'USERLOCATIONKEY';
+
+  Future<bool> saveLocation(String location) async {
+    final pref = await SharedPreferences.getInstance();
+    return pref.setString(userLocationKey, location);
+  }
+
+  Future<String?> getSavedLocation() async {
+    final pref = await SharedPreferences.getInstance();
+    return pref.getString(userLocationKey);
+  }
 
   Future<void> clearAll() async {
     final prefs = await SharedPreferences.getInstance();

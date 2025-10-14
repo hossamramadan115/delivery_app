@@ -9,4 +9,5 @@ abstract class Assets {
   static const kCurrentOrder = 'assets/images/current_order.png';
   static const kDeliveryMan = 'assets/images/delivery_man.png';
   static const kProfileImage = 'assets/images/profile.jpg';
+  static const kAdmin = 'assets/images/admin.png';
 }

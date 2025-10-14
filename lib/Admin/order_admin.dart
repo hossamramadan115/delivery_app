@@ -32,15 +32,19 @@ class _OrderAdminState extends State<OrderAdmin> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: kMostUse,
+        appBar: AppBar(
+          iconTheme: IconThemeData(
+            color: Colors.white, // ← هنا بتغير لون الأيقونة
+          ),
+          backgroundColor: kMostUse,
+          title: Text(
+            'All Orders',
+            style: AppStyless.styleWhiteBold22,
+          ),
+          centerTitle: true,
+        ),
         body: Column(
           children: [
-            SizedBox(height: context.screenHeight * 0.03),
-            Center(
-              child: Text(
-                'Add package',
-                style: AppStyless.styleWhiteBold22,
-              ),
-            ),
             SizedBox(height: context.screenHeight * .015),
             Expanded(
               child: ClipRRect(

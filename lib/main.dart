@@ -20,6 +20,7 @@ class DeliveryApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routerConfig: AppRouter.router,
+      debugShowCheckedModeBanner: false,
     );
   }
 }

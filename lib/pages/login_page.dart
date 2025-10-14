@@ -1,3 +1,4 @@
+import 'package:delivery/Admin/admin_button.dart';
 import 'package:delivery/constsnt.dart';
 import 'package:delivery/helper/show_snack_bar.dart';
 import 'package:delivery/services/auth_service.dart';
@@ -25,46 +26,45 @@ class _LoginPageState extends State<LoginPage> {
   final password = TextEditingController();
 
   void loginMethod() async {
-    if (!formKey.currentState!.validate()) return;
-    if (!mounted) return; // تأكيد قبل أي setState
-    setState(() {
-      isLoading = true;
-    });
+  if (!formKey.currentState!.validate()) return;
 
-    try {
-      final user = await AuthService().login(
-        email: email.text.trim(),
-        password: password.text.trim(),
-      );
+  if (!mounted) return;
+  setState(() => isLoading = true);
 
-      if (user != null) {
-        final snapshot =
-            await DatabaseMethods().getUserByEmail(email.text.trim());
+  try {
+    final user = await AuthService().login(
+      email: email.text.trim(),
+      password: password.text.trim(),
+    );
 
-        if (snapshot != null) {
-          final userData = snapshot.data() as Map<String, dynamic>;
+    if (user != null) {
+      final snapshot = await DatabaseMethods().getUserByEmail(email.text.trim());
 
-          await SharedPreferencesHelper().saveUserEmail(userData["email"]);
-          await SharedPreferencesHelper().saveUserId(userData["id"]);
-          await SharedPreferencesHelper().saveUserName(userData["name"]);
-          await SharedPreferencesHelper().saveUserImage(userData["image"]);
-        }
+      if (snapshot != null) {
+        final userData = snapshot.data() as Map<String, dynamic>;
 
-        if (!mounted) return;
-        showSuccessSnack(context, "Welcome back 👋");
-        context.go(AppRouter.kBottomBar);
+        await SharedPreferencesHelper().saveUserEmail(userData["email"]);
+        await SharedPreferencesHelper().saveUserId(userData["id"]);
+        await SharedPreferencesHelper().saveUserName(userData["name"]);
+        await SharedPreferencesHelper().saveUserImage(userData["image"]);
       }
-    } catch (e) {
-      // final errorMessage = e is String ? e : "An unexpected error occurred.";
-      // if (!mounted) return;
-      showErrorSnack(context, e.toString());
-    } finally {
-      // if (!mounted) return;
-      setState(() {
-        isLoading = false;
-      });
+
+      if (!mounted) return; // ✅ قبل أي استخدام لـ context
+      showSuccessSnack(context, "Welcome back 👋");
+
+      // التنقل لازم يكون آخر خطوة
+      context.go(AppRouter.kBottomBar);
+      return; // ✅ عشان ما يكملش ل finally بعد كده
     }
+  } catch (e) {
+    if (!mounted) return; // ✅
+    showErrorSnack(context, e.toString());
+  } finally {
+    if (!mounted) return; // ✅
+    setState(() => isLoading = false);
   }
+}
+
 
   @override
   void dispose() {
@@ -216,6 +216,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
+                Center(child: AdminButton()),
+                SizedBox(height: height * 0.05),
               ],
             ),
           );

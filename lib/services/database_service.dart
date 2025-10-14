@@ -90,7 +90,16 @@ class DatabaseMethods {
     }
   }
 
-
+  Future<void> deleteOrder(String orderId) async {
+  try {
+    await FirebaseFirestore.instance
+        .collection("Order")
+        .doc(orderId)
+        .delete();
+  } catch (e) {
+    throw "Error deleting order: $e";
+  }
+}
 //   Future<void> addOrderDetails(Map<String, dynamic> orderInfoMap) async {
 //     try {
 //       await FirebaseFirestore.instance.collection("Orders").add(orderInfoMap);
@@ -136,16 +145,7 @@ class DatabaseMethods {
 //     }
 //   }
 
-//   Future<void> deleteOrder(String orderId) async {
-//   try {
-//     await FirebaseFirestore.instance
-//         .collection("Orders")
-//         .doc(orderId)
-//         .delete();
-//   } catch (e) {
-//     throw "Error deleting order: $e";
-//   }
-// }
+
 
   Future<void> deleteUser(String id) async {
     try {
@@ -154,6 +154,8 @@ class DatabaseMethods {
       throw "Error deleting user: $e";
     }
   }
+
+  // Future<void> deleteOrder(String orderId) async {}
 
 //    Future<void> addProduct(
 //     Map<String, dynamic> productInfoMap, String categoryName) async {

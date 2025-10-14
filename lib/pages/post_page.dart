@@ -2,7 +2,6 @@ import 'package:delivery/constsnt.dart';
 import 'package:delivery/utils/app_styless.dart';
 import 'package:delivery/utils/assets.dart';
 import 'package:delivery/utils/media_query_values.dart';
-import 'package:delivery/widgets/add_location.dart';
 import 'package:delivery/widgets/pickup_dropoff_details.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +15,7 @@ class PostPage extends StatelessWidget {
       resizeToAvoidBottomInset: true, // ✅ عشان لما الكيبورد يفتح ميبوش الحاجة
       body: Column(
         children: [
-          SizedBox(height: context.screenHeight * 0.03),
+          SizedBox(height: context.screenHeight * 0.04),
           Center(
             child: Text(
               'Add package',
@@ -44,10 +43,10 @@ class PostPage extends StatelessWidget {
                         Center(
                           child: Image.asset(
                             Assets.kDeliveryTruck,
-                            height: context.screenHeight * .2,
+                            height: context.screenHeight * .15,
                           ),
                         ),
-                        AddLocation(),
+                        // AddLocation(),
                         SizedBox(height: context.screenHeight * .02),
                         PickupDropoffDetails(),
                         SizedBox(height: context.screenHeight * .08),

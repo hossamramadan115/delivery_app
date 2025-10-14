@@ -1,8 +1,13 @@
+import 'package:delivery/Admin/admin_home_page.dart';
+import 'package:delivery/Admin/admin_login.dart';
 import 'package:delivery/Admin/order_admin.dart';
 import 'package:delivery/pages/bottom_bar.dart';
 import 'package:delivery/pages/login_page.dart';
 import 'package:delivery/pages/on_boarding.dart';
 import 'package:delivery/pages/sign_up_page.dart';
+import 'package:delivery/services/shared_preferences_helper.dart';
+import 'package:delivery/utils/go_router_refresh_stream.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 
 abstract class AppRouter {
@@ -11,8 +16,48 @@ abstract class AppRouter {
   static final kSignupPage = '/signupPage';
   static final kLoginPage = '/loginPage';
   static final kOrderAdmin = '/orderAdmin';
+  static final kAdminLogin = '/adminLogin';
+  static final kAdminHomePage = '/adminHomePage';
+  // static final kAdminAllOrder = '/adminAllOrder';
 
   static final router = GoRouter(
+    initialLocation: kOnBoarding,
+    refreshListenable: GoRouterRefreshStream(
+      FirebaseAuth.instance.authStateChanges(),
+    ),
+    redirect: (context, state) async {
+      final prefs = SharedPreferencesHelper();
+      final isAdmin = await prefs.getIsAdminLoggedIn() ?? false;
+
+      final user = FirebaseAuth.instance.currentUser;
+      final loggingIn = state.uri.toString() == kLoginPage ||
+          state.uri.toString() == kSignupPage;
+      final onBoarding = state.uri.toString() == kOnBoarding;
+      final adminLogin = state.uri.toString() == kAdminLogin;
+
+      if (isAdmin) {
+        final allowedAdminRoutes = [
+          kAdminHomePage,
+          kOrderAdmin,
+          // kAdminAllOrder,
+        ];
+
+        if (!allowedAdminRoutes.contains(state.uri.toString())) {
+          return kAdminHomePage;
+        }
+        return null;
+      }
+
+      if (user == null) {
+        if (onBoarding) return null;
+        if (adminLogin) return null;
+        if (!loggingIn) return kOnBoarding;
+        return null;
+      }
+      if (onBoarding || loggingIn || adminLogin) return kBottomBar;
+
+      return null;
+    },
     routes: [
       GoRoute(
         path: kOnBoarding,
@@ -34,6 +79,18 @@ abstract class AppRouter {
         path: kOrderAdmin,
         builder: (context, state) => OrderAdmin(),
       ),
+      GoRoute(
+        path: kAdminLogin,
+        builder: (context, state) => AdminLogin(),
+      ),
+      GoRoute(
+        path: kAdminHomePage,
+        builder: (context, state) => AdminHomePage(),
+      ),
+      // GoRoute(
+      //   path: kAdminAllOrder,
+      //   builder: (context, state) => OrderAdmin(),
+      // ),
     ],
   );
 }
@@ -53,43 +110,43 @@ abstract class AppRouter {
 //   static final kOnBoarding = '/';
 
 //   static final router = GoRouter(
-//     initialLocation: kOnBoarding,
-//     refreshListenable: GoRouterRefreshStream(
-//       FirebaseAuth.instance.authStateChanges(),
-//     ),
-//     redirect: (context, state) async {
-//       final prefs = SharedPreferencesHelper();
-//       final isAdmin = await prefs.getIsAdminLoggedIn() ?? false;
+    // initialLocation: kOnBoarding,
+    // refreshListenable: GoRouterRefreshStream(
+    //   FirebaseAuth.instance.authStateChanges(),
+    // ),
+    // redirect: (context, state) async {
+    //   final prefs = SharedPreferencesHelper();
+    //   final isAdmin = await prefs.getIsAdminLoggedIn() ?? false;
 
-//       final user = FirebaseAuth.instance.currentUser;
-//       final loggingIn = state.uri.toString() == kLoginpage ||
-//           state.uri.toString() == kSignUpPage;
-//       final onBoarding = state.uri.toString() == kOnBoarding;
-//       final adminLogin = state.uri.toString() == kAdminLogin;
+    //   final user = FirebaseAuth.instance.currentUser;
+    //   final loggingIn = state.uri.toString() == kLoginpage ||
+    //       state.uri.toString() == kSignUpPage;
+    //   final onBoarding = state.uri.toString() == kOnBoarding;
+    //   final adminLogin = state.uri.toString() == kAdminLogin;
 
-//       if (isAdmin) {
-//         final allowedAdminRoutes = [
-//           kAdminHomePage,
-//           kAddProductPage,
-//           kAllOrders,
-//         ];
+    //   if (isAdmin) {
+    //     final allowedAdminRoutes = [
+    //       kAdminHomePage,
+    //       kAddProductPage,
+    //       kAllOrders,
+    //     ];
 
-//         if (!allowedAdminRoutes.contains(state.uri.toString())) {
-//           return kAdminHomePage;
-//         }
-//         return null;
-//       }
+    //     if (!allowedAdminRoutes.contains(state.uri.toString())) {
+    //       return kAdminHomePage;
+    //     }
+    //     return null;
+    //   }
 
-//       if (user == null) {
-//         if (onBoarding) return null;
-//         if (adminLogin) return null;
-//         if (!loggingIn) return kOnBoarding;
-//         return null;
-//       }
-//       if (onBoarding || loggingIn || adminLogin) return kBottombar;
+    //   if (user == null) {
+    //     if (onBoarding) return null;
+    //     if (adminLogin) return null;
+    //     if (!loggingIn) return kOnBoarding;
+    //     return null;
+    //   }
+    //   if (onBoarding || loggingIn || adminLogin) return kBottombar;
 
-//       return null;
-//     },
+    //   return null;
+    // },
 //     routes: [
 //       GoRoute(
 //         path: kOnBoarding,
@@ -107,10 +164,10 @@ abstract class AppRouter {
 //         path: kAdminLogin,
 //         builder: (context, state) => AdminLogin(),
 //       ),
-//       GoRoute(
-//         path: kAdminHomePage,
-//         builder: (context, state) => AdminHomePage(),
-//       ),
+      // GoRoute(
+      //   path: kAdminHomePage,
+      //   builder: (context, state) => AdminHomePage(),
+      // ),
 //       GoRoute(
 //         path: kAddProductPage,
 //         builder: (context, state) => AddProductPage(),
