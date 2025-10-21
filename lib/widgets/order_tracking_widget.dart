@@ -1,6 +1,6 @@
 import 'package:delivery/constsnt.dart';
 import 'package:delivery/helper/show_custom_dialog.dart';
-import 'package:delivery/models/order.dart';
+import 'package:delivery/models/order_model.dart';
 import 'package:delivery/services/database_service.dart';
 import 'package:delivery/utils/media_query_values.dart';
 import 'package:flutter/material.dart';

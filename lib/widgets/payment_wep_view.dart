@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:delivery/helper/show_snack_bar.dart';
-import 'package:delivery/models/order.dart';
+import 'package:delivery/models/order_model.dart';
 import 'package:delivery/services/database_service.dart';
 import 'package:delivery/services/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';

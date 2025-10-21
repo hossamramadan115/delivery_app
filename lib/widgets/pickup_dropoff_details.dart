@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:delivery/constsnt.dart';
 import 'package:delivery/helper/show_snack_bar.dart';
-import 'package:delivery/models/order.dart';
+import 'package:delivery/models/order_model.dart';
 import 'package:delivery/utils/app_styless.dart';
 import 'package:delivery/utils/media_query_values.dart';
 import 'package:delivery/widgets/custom_button.dart';

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:delivery/constsnt.dart';
-import 'package:delivery/models/order.dart';
+import 'package:delivery/models/order_model.dart';
 import 'package:delivery/utils/app_styless.dart';
 import 'package:delivery/utils/media_query_values.dart';
 import 'package:delivery/widgets/order_toggle_button.dart';
