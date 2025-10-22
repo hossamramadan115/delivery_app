@@ -61,6 +61,15 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       SizedBox(height: screenWidth * 0.1),
                       CustomListTile(
                         icon: Icons.local_shipping_outlined,
+                        title: 'Admin Pending Order',
+                        onTap: () {
+                          GoRouter.of(context)
+                              .push(AppRouter.kAdminPendingOrder);
+                        },
+                      ),
+                      SizedBox(height: screenWidth * 0.08),
+                      CustomListTile(
+                        icon: Icons.local_shipping_outlined,
                         title: 'Manage Orders',
                         onTap: () {
                           GoRouter.of(context).push(AppRouter.kOrderAdmin);

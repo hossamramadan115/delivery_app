@@ -1,5 +1,6 @@
 import 'package:delivery/Admin/admin_home_page.dart';
 import 'package:delivery/Admin/admin_login.dart';
+import 'package:delivery/Admin/admin_pending_orders.dart';
 import 'package:delivery/Admin/order_admin.dart';
 import 'package:delivery/pages/bottom_bar.dart';
 import 'package:delivery/pages/login_page.dart';
@@ -18,7 +19,7 @@ abstract class AppRouter {
   static final kOrderAdmin = '/orderAdmin';
   static final kAdminLogin = '/adminLogin';
   static final kAdminHomePage = '/adminHomePage';
-  // static final kAdminAllOrder = '/adminAllOrder';
+  static final kAdminPendingOrder = '/adminPendingOrder';
 
   static final router = GoRouter(
     initialLocation: kOnBoarding,
@@ -39,7 +40,7 @@ abstract class AppRouter {
         final allowedAdminRoutes = [
           kAdminHomePage,
           kOrderAdmin,
-          // kAdminAllOrder,
+          kAdminPendingOrder,
         ];
 
         if (!allowedAdminRoutes.contains(state.uri.toString())) {
@@ -87,10 +88,10 @@ abstract class AppRouter {
         path: kAdminHomePage,
         builder: (context, state) => AdminHomePage(),
       ),
-      // GoRoute(
-      //   path: kAdminAllOrder,
-      //   builder: (context, state) => OrderAdmin(),
-      // ),
+      GoRoute(
+        path: kAdminPendingOrder,
+        builder: (context, state) => AdminPendingOrdersPage(),
+      ),
     ],
   );
 }

@@ -29,6 +29,15 @@ class _PickupDropoffDetailsState extends State<PickupDropoffDetails> {
   final dropOffPhone = TextEditingController();
 
   bool _loading = false;
+  void _clearTextControllers() {
+    pickUpAddress.clear();
+    pickUpUserName.clear();
+    pickUpPhone.clear();
+    drpOffAddress.clear();
+    dropOffUserName.clear();
+    dropOffPhone.clear();
+    // يمكنك إضافة أي Controllers أخرى تحتاج لتصفيرها هنا
+  }
 
   Future<void> startPayment(OrderModel order) async {
     setState(() => _loading = true);
@@ -67,7 +76,8 @@ class _PickupDropoffDetailsState extends State<PickupDropoffDetails> {
           "order_id": orderId,
           "billing_data": {
             "apartment": "NA",
-            "email": FirebaseAuth.instance.currentUser?.email ?? "test@example.com",
+            "email":
+                FirebaseAuth.instance.currentUser?.email ?? "test@example.com",
             "floor": "NA",
             "first_name": order.pickUpUserName,
             "street": "NA",
@@ -97,7 +107,7 @@ class _PickupDropoffDetailsState extends State<PickupDropoffDetails> {
         MaterialPageRoute(
           builder: (_) => PaymentWebView(
             url: iframeUrl,
-            order: order, 
+            order: order,
           ),
         ),
       );
@@ -200,7 +210,9 @@ class _PickupDropoffDetailsState extends State<PickupDropoffDetails> {
                             dropOffUserName.text.isNotEmpty &&
                             dropOffPhone.text.isNotEmpty) {
                           final order = OrderModel(
-                            id: DateTime.now().millisecondsSinceEpoch.toString(),
+                            id: DateTime.now()
+                                .millisecondsSinceEpoch
+                                .toString(),
                             pickUpAddress: pickUpAddress.text,
                             pickUpUserName: pickUpUserName.text,
                             pickUpPhone: pickUpPhone.text,
@@ -210,10 +222,14 @@ class _PickupDropoffDetailsState extends State<PickupDropoffDetails> {
                             price: 100.0,
                           );
 
-                          // ✅ الدفع فقط (Firestore هيتسجل بعد النجاح جوه PaymentWebView)
+                          // ✅ الدفع
                           await startPayment(order);
+
+                          // ✅ 2. استدعاء دالة التصفير بعد انتهاء عملية الدفع
+                          _clearTextControllers();
                         } else {
-                          showErrorSnack(context, 'Please Fill Complete Details');
+                          showErrorSnack(
+                              context, 'Please Fill Complete Details');
                         }
                       },
               ),

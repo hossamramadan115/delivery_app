@@ -75,6 +75,7 @@ class _OrdersPageState extends State<OrdersPage> {
                             .collection("Order")
                             // .orderBy("CreatedAt", descending: true)
                             .where("Email", isEqualTo: userEmail)
+                            .where("Status", isEqualTo: "Accepted")
                             .snapshots(),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
